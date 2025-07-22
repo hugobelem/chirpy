@@ -1,0 +1,41 @@
+package main
+
+import (
+	"database/sql"
+	"log"
+	"net/http"
+	"os"
+	"sync/atomic"
+
+	"github.com/hugobelem/chirpy/internal/database"
+)
+
+func setupRouter() *http.ServeMux {
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL must be set")
+	}
+
+	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatalf("Error openning database: %s", err)
+	}
+	dbQueries := database.New(db)
+
+	config := apiConfig{
+		fileHits: atomic.Int32{},
+		db:       dbQueries,
+		platform: os.Getenv("PLATFORM"),
+	}
+
+	fileHandler := http.StripPrefix(filepath, http.FileServer(http.Dir(dir)))
+	mux := http.NewServeMux()
+	mux.Handle(filepath, config.middlewareMetrics(fileHandler))
+	mux.HandleFunc("GET  /api/healthz", handlerReadiness)
+	mux.HandleFunc("POST /api/validate_chirp", handlerChirpsValidate)
+	mux.HandleFunc("POST /api/users", config.handlerCreateUser)
+	
+	mux.HandleFunc("GET  /admin/metrics", config.handlerMetrics)
+	mux.HandleFunc("POST /admin/reset", config.handlerReset)
+	return mux
+}

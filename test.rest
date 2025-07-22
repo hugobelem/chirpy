@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/users
+
+{
+  "email": "email@exemple.com"
+}
+
+###
+
+POST http://localhost:8080/admin/reset
