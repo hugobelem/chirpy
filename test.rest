@@ -12,9 +12,12 @@ POST http://localhost:8080/admin/reset
 POST http://localhost:8080/api/chirps
 
 {
-  "body": "Chirp Test 8",
-  "user_id": "4a983dd4-5d18-47a7-a145-e15b76b0d387"
+  "body": "Chirp Test 1",
+  "user_id": "6e1e7551-b136-4ac4-ac3e-6a9e82b87b9c"
 }
 
 ###
 GET http://localhost:8080/api/chirps
+
+###
+GET http://localhost:8080/api/chirps/fc61dd20-27b9-4f75-b0a5-34731c3e69a1
