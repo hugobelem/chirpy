@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strings"
@@ -27,10 +28,6 @@ func (config *apiConfig) handlerCreateChirps(
 		Body   string    `json:"body"`
 		UserID uuid.UUID `json:"user_id"`
 	}
-	type response struct {
-		Body   string    `json:"body"`
-		UserID uuid.UUID `json:"user_id"`
-	}
 
 	decoder := json.NewDecoder(r.Body)
 	params := parameters{}
@@ -45,27 +42,17 @@ func (config *apiConfig) handlerCreateChirps(
 		return
 	}
 
-	const maxChirpLength = 140
-	if len(params.Body) > maxChirpLength {
-		respondWithError(w, http.StatusBadRequest, "Chirp is too long", nil)
-		return
-	}
-
-	bardWords := map[string]struct{}{
-		"kerfuffle": {},
-		"sharbert":  {},
-		"fornax":    {},
-	}
-	params.Body = getCleanedBody(params.Body, bardWords)
-
-	chirpParams := database.CreateChirpParams{
-		Body: params.Body,
-		UserID: params.UserID,
-	}
-
-	chirp, err := config.db.CreateChirp(r.Context(), chirpParams)
+	cleaned, err := validateChirp(params.Body)
 	if err != nil {
-		log.Printf("Could't create chirp %s", err)
+		respondWithError(w, http.StatusBadRequest, err.Error(), err)
+	}
+
+	chirp, err := config.db.CreateChirp(r.Context(), database.CreateChirpParams{
+		Body: cleaned,
+		UserID: params.UserID,	
+	})
+	if err != nil {
+		log.Fatalf("Could't create chirp %s", err)
 		respondWithError(
 			w,
 			http.StatusInternalServerError,
@@ -74,11 +61,28 @@ func (config *apiConfig) handlerCreateChirps(
 		)
 	}
 
-	respondWithJSON(w, http.StatusCreated, response{
+	respondWithJSON(w, http.StatusCreated, Chirp{
+		ID: chirp.ID,
+		CreatedAt: chirp.CreatedAt.Time,
+		UpdatedAt: chirp.UpdatedAt.Time,
 		Body: chirp.Body,
 		UserID: chirp.UserID,
 	})
+}
 
+func validateChirp(body string) (string, error) {
+	const maxChirpLength = 140
+	if len(body) > maxChirpLength {
+		return "", errors.New("Chirp is too long")
+	}
+
+	bardWords := map[string]struct{}{
+		"kerfuffle": {},
+		"sharbert":  {},
+		"fornax":    {},
+	}
+	cleaned := getCleanedBody(body, bardWords)
+	return cleaned, nil
 }
 
 func getCleanedBody(body string, badWords map[string]struct{}) string {
