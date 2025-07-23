@@ -1,9 +1,17 @@
 POST http://localhost:8080/api/users
 
 {
-  "email": "email@exemple.com"
+  "email": "user@chirpy.com"
 }
 
 ###
 
 POST http://localhost:8080/admin/reset
+
+###
+POST http://localhost:8080/api/chirps
+
+{
+  "body": "Chirp Test 2",
+  "user_id": "c37fb2f2-76b0-4b7a-bf36-f1bb5bf9953d"
+}
