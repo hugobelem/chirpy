@@ -15,3 +15,6 @@ POST http://localhost:8080/api/chirps
   "body": "Chirp Test 8",
   "user_id": "4a983dd4-5d18-47a7-a145-e15b76b0d387"
 }
+
+###
+GET http://localhost:8080/api/chirps
