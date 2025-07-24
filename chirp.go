@@ -58,11 +58,11 @@ func (config *apiConfig) handlerGetSingleChirp(
 	}
 
 	respondWithJSON(w, http.StatusOK, Chirp{
-		ID: chirp.ID,
+		ID:        chirp.ID,
 		CreatedAt: chirp.CreatedAt.Time,
 		UpdatedAt: chirp.CreatedAt.Time,
-		Body: chirp.Body,
-		UserID: chirp.UserID,
+		Body:      chirp.Body,
+		UserID:    chirp.UserID,
 	})
 }
 
@@ -83,16 +83,16 @@ func (config *apiConfig) handlerRetrieveChirps(
 	listChirps := []Chirp{}
 	for _, chirp := range chirps {
 		listChirps = append(listChirps, Chirp{
-			ID: chirp.ID,
+			ID:        chirp.ID,
 			CreatedAt: chirp.CreatedAt.Time,
 			UpdatedAt: chirp.UpdatedAt.Time,
-			Body: chirp.Body,
-			UserID: chirp.UserID,
+			Body:      chirp.Body,
+			UserID:    chirp.UserID,
 		})
 	}
-	
+
 	respondWithJSON(w, http.StatusOK, listChirps)
-	
+
 }
 
 func (config *apiConfig) handlerCreateChirps(
@@ -123,8 +123,8 @@ func (config *apiConfig) handlerCreateChirps(
 	}
 
 	chirp, err := config.db.CreateChirp(r.Context(), database.CreateChirpParams{
-		Body: cleaned,
-		UserID: params.UserID,	
+		Body:   cleaned,
+		UserID: params.UserID,
 	})
 	if err != nil {
 		log.Fatalf("Could't create chirp %s", err)
@@ -137,11 +137,11 @@ func (config *apiConfig) handlerCreateChirps(
 	}
 
 	respondWithJSON(w, http.StatusCreated, Chirp{
-		ID: chirp.ID,
+		ID:        chirp.ID,
 		CreatedAt: chirp.CreatedAt.Time,
 		UpdatedAt: chirp.UpdatedAt.Time,
-		Body: chirp.Body,
-		UserID: chirp.UserID,
+		Body:      chirp.Body,
+		UserID:    chirp.UserID,
 	})
 }
 
