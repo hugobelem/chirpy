@@ -1,7 +1,8 @@
 POST http://localhost:8080/api/users
 
 {
-  "email": "user@chirpy.com"
+  "email": "bro@chirpy.com",
+  "password": "password"
 }
 
 ###
@@ -21,3 +22,11 @@ GET http://localhost:8080/api/chirps
 
 ###
 GET http://localhost:8080/api/chirps/fc61dd20-27b9-4f75-b0a5-34731c3e69a1
+
+###
+POST http://localhost:8080/api/login
+
+{
+  "email": "bro@chirpy.com",
+  "password": "password"
+}

@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hugobelem/chirpy/internal"
+	"github.com/hugobelem/chirpy/internal/database"
 )
 
 type User struct {
@@ -18,7 +20,8 @@ type User struct {
 
 func (config *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 	type response struct {
 		User
@@ -37,25 +40,33 @@ func (config *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	user, err := config.db.CreateUser(r.Context(), params.Email)
+	hashedPassword, err := internal.HashPassword(params.Password)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Could not hash password")
+		return
+	}
+
+	user, err := config.db.CreateUser(r.Context(), database.CreateUserParams{
+		Email:          params.Email,
+		HashedPassword: hashedPassword,
+	})
+	if err != nil {
+		log.Println(err)
 		respondWithError(
 			w,
 			http.StatusInternalServerError,
 			"Could't create user",
 			err,
 		)
-	}
-
-	userData := User{
-		ID:        user.ID,
-		CreatedAt: user.CreatedAt.Time,
-		UpdatedAt: user.UpdatedAt.Time,
-		Email:     user.Email,
+		return
 	}
 
 	respondWithJSON(w, http.StatusCreated, response{
-		User: userData,
+		User: User{
+			ID:        user.ID,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+			Email:     user.Email,
+		},
 	})
 }

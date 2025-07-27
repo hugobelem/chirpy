@@ -59,8 +59,8 @@ func (config *apiConfig) handlerGetSingleChirp(
 
 	respondWithJSON(w, http.StatusOK, Chirp{
 		ID:        chirp.ID,
-		CreatedAt: chirp.CreatedAt.Time,
-		UpdatedAt: chirp.CreatedAt.Time,
+		CreatedAt: chirp.CreatedAt,
+		UpdatedAt: chirp.CreatedAt,
 		Body:      chirp.Body,
 		UserID:    chirp.UserID,
 	})
@@ -84,8 +84,8 @@ func (config *apiConfig) handlerRetrieveChirps(
 	for _, chirp := range chirps {
 		listChirps = append(listChirps, Chirp{
 			ID:        chirp.ID,
-			CreatedAt: chirp.CreatedAt.Time,
-			UpdatedAt: chirp.UpdatedAt.Time,
+			CreatedAt: chirp.CreatedAt,
+			UpdatedAt: chirp.UpdatedAt,
 			Body:      chirp.Body,
 			UserID:    chirp.UserID,
 		})
@@ -138,8 +138,8 @@ func (config *apiConfig) handlerCreateChirps(
 
 	respondWithJSON(w, http.StatusCreated, Chirp{
 		ID:        chirp.ID,
-		CreatedAt: chirp.CreatedAt.Time,
-		UpdatedAt: chirp.UpdatedAt.Time,
+		CreatedAt: chirp.CreatedAt,
+		UpdatedAt: chirp.UpdatedAt,
 		Body:      chirp.Body,
 		UserID:    chirp.UserID,
 	})
