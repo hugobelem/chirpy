@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hugobelem/chirpy/internal"
+	"github.com/hugobelem/chirpy/internal/auth"
 )
 
 func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,7 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = internal.CheckPasswordHash(params.Password, user.HashedPassword)
+	err = auth.CheckPasswordHash(params.Password, user.HashedPassword)
 	log.Println(params.Password)
 	log.Println(user.HashedPassword)
 	if err != nil {
