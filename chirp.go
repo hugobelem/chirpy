@@ -5,10 +5,12 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/hugobelem/chirpy/internal/auth"
 	"github.com/hugobelem/chirpy/internal/database"
 )
 
@@ -99,6 +101,27 @@ func (config *apiConfig) handlerCreateChirps(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
+	token, err := auth.GetBearerToken(r.Header)
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusUnauthorized,
+			"could not resolve token",
+			err,
+		)
+		return
+	}
+	_, err = auth.ValidateJWT(token, os.Getenv("SECRET"))
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusUnauthorized,
+			"invalid token",
+			err,
+		)
+		return
+	}
+
 	type parameters struct {
 		Body   string    `json:"body"`
 		UserID uuid.UUID `json:"user_id"`
@@ -106,7 +129,7 @@ func (config *apiConfig) handlerCreateChirps(
 
 	decoder := json.NewDecoder(r.Body)
 	params := parameters{}
-	err := decoder.Decode(&params)
+	err = decoder.Decode(&params)
 	if err != nil {
 		respondWithError(
 			w,

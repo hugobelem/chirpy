@@ -20,6 +20,7 @@ type apiConfig struct {
 	fileHits atomic.Int32
 	db       *database.Queries
 	platform string
+	secret   string
 }
 
 func main() {

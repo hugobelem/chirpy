@@ -26,6 +26,7 @@ func setupRouter() *http.ServeMux {
 		fileHits: atomic.Int32{},
 		db:       dbQueries,
 		platform: os.Getenv("PLATFORM"),
+		secret:   os.Getenv("SECRET"),
 	}
 
 	fileHandler := http.StripPrefix(filepath, http.FileServer(http.Dir(dir)))

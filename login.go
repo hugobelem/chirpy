@@ -4,14 +4,17 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/hugobelem/chirpy/internal/auth"
 )
 
 func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
-		Email    string
-		Password string
+		Email            string `json:"email"`
+		Password         string `json:"password"`
+		ExpiresInSeconds int64  `json:"expires_in_seconds"`
 	}
 	type response struct {
 		User
@@ -43,13 +46,32 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = auth.CheckPasswordHash(params.Password, user.HashedPassword)
-	log.Println(params.Password)
-	log.Println(user.HashedPassword)
 	if err != nil {
 		respondWithError(
 			w,
 			http.StatusUnauthorized,
 			"Incorrect email or password",
+			err,
+		)
+		return
+	}
+
+	expiresIn := int64(3600)
+	if params.ExpiresInSeconds > 0 {
+		expiresIn = min(params.ExpiresInSeconds, 3600)
+	}
+
+	token, err := auth.MakeJWT(
+		user.ID,
+		os.Getenv("SECRET"),
+		time.Duration(expiresIn),
+	)
+	if err != nil {
+		log.Println(err)
+		respondWithError(
+			w,
+			http.StatusInternalServerError,
+			"an unexpected error accurred",
 			err,
 		)
 		return
@@ -61,6 +83,7 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 			CreatedAt: user.CreatedAt,
 			UpdatedAt: user.UpdatedAt,
 			Email:     user.Email,
+			Token:     token,
 		},
 	})
 }

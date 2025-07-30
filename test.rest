@@ -11,10 +11,11 @@ POST http://localhost:8080/admin/reset
 
 ###
 POST http://localhost:8080/api/chirps
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMmRjNzExYTUtYTg4ZS00M2NmLThhMzEtYmQ5NmY5OWZmMGU2IiwiZXhwIjoxNzUzODkxMjgyLCJpYXQiOjE3NTM4OTEyODJ9.-L8Fuc16FuOmQEl0YYcNe95olQMZ_ieDa-J4xmpBFpE
 
 {
   "body": "Chirp Test 1",
-  "user_id": "6e1e7551-b136-4ac4-ac3e-6a9e82b87b9c"
+  "user_id": "2dc711a5-a88e-43cf-8a31-bd96f99ff0e6"
 }
 
 ###
@@ -28,5 +29,6 @@ POST http://localhost:8080/api/login
 
 {
   "email": "bro@chirpy.com",
-  "password": "password"
+  "password": "password",
+  "expires_in_seconds": 1
 }
