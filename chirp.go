@@ -111,7 +111,7 @@ func (config *apiConfig) handlerCreateChirps(
 		)
 		return
 	}
-	_, err = auth.ValidateJWT(token, os.Getenv("SECRET"))
+	userID, err := auth.ValidateJWT(token, os.Getenv("SECRET"))
 	if err != nil {
 		respondWithError(
 			w,
@@ -124,7 +124,6 @@ func (config *apiConfig) handlerCreateChirps(
 
 	type parameters struct {
 		Body   string    `json:"body"`
-		UserID uuid.UUID `json:"user_id"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -147,7 +146,7 @@ func (config *apiConfig) handlerCreateChirps(
 
 	chirp, err := config.db.CreateChirp(r.Context(), database.CreateChirpParams{
 		Body:   cleaned,
-		UserID: params.UserID,
+		UserID: userID,
 	})
 	if err != nil {
 		log.Fatalf("Could't create chirp %s", err)
