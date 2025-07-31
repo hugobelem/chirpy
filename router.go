@@ -34,6 +34,7 @@ func setupRouter() *http.ServeMux {
 	mux.Handle(filepath, config.middlewareMetrics(fileHandler))
 	mux.HandleFunc("GET  /api/healthz", handlerReadiness)
 	mux.HandleFunc("POST /api/users", config.handlerCreateUser)
+	mux.HandleFunc("PUT  /api/users", config.handlerUpdateUser)
 	mux.HandleFunc("POST /api/chirps", config.handlerCreateChirps)
 	mux.HandleFunc("GET  /api/chirps", config.handlerRetrieveChirps)
 	mux.HandleFunc("GET  /api/chirps/{chirpID}", config.handlerGetSingleChirp)

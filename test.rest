@@ -6,8 +6,17 @@ POST http://localhost:8080/api/users
 }
 
 ###
+PUT http://localhost:8080/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiNDU3MTczYWQtM2FmNy00ZjM0LTg4MjMtZmM0ZTI1ZjcwYzQ4IiwiZXhwIjoxNzUzOTY2MDA2LCJpYXQiOjE3NTM5NjI0MDZ9.lbDnMImVwBGZSNTIod8zyK44jvynRMptNPU1yi9pNtE
 
+{
+  "email": "brosky@chirpy.com",
+  "password": "passwordo"
+}
+
+###
 POST http://localhost:8080/admin/reset
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMWI4OGFjNDAtNjJjNC00ZmVlLWI4ZTctZDg0YTc1ODRkYTNiIiwiZXhwIjoxNzUzOTI1MTI0LCJpYXQiOjE3NTM5MjE1MjR9.K_T9ehOKrjPLHBj0lwA5rAwyS8NKB-kBt2-LjS2r4ow
 
 ###
 POST http://localhost:8080/api/chirps
@@ -27,8 +36,8 @@ GET http://localhost:8080/api/chirps/fc61dd20-27b9-4f75-b0a5-34731c3e69a1
 POST http://localhost:8080/api/login
 
 {
-  "email": "bro@chirpy.com",
-  "password": "password"
+  "email": "brosky@chirpy.com",
+  "password": "passwordo"
 }
 
 ###

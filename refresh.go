@@ -12,7 +12,7 @@ func (config *apiConfig) handlerRefreshToken(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	type response struct{
+	type response struct {
 		Token string `json:"token"`
 	}
 
