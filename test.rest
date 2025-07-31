@@ -20,14 +20,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktY
 
 ###
 POST http://localhost:8080/api/chirps
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiZDJhYmU5YjAtY2IzZi00YTc0LTg5YWEtM2EyYzA5NjUzNGNiIiwiZXhwIjoxNzUzOTY3ODcyLCJpYXQiOjE3NTM5NjQyNzJ9.dILIkLjrgU7Fl7gFqrONbAnSHShdfyfPD8qvxj5f6wI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMDk5ZGU4ZjYtYjQ4MS00ZjY0LWFkOTktYjhiMzEzNmVjZTdmIiwiZXhwIjoxNzUzOTc0OTgzLCJpYXQiOjE3NTM5NzEzODN9.-w43HZQPjwIfASrkasiUejB66pEpJpLRnj2tj0yEnNo
 
 {
   "body": "Chirp 2"
 }
 
 ###
-GET http://localhost:8080/api/chirps
+GET http://localhost:8080/api/chirps?author_id=099de8f6-b481-4f64-ad99-b8b3136ece7f
 
 ###
 DELETE http://localhost:8080/api/chirps/10982466-cc05-45e9-a2eb-dd6310b48038

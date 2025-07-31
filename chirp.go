@@ -72,14 +72,44 @@ func (config *apiConfig) handlerRetrieveChirps(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
+
+	var chirps []database.Chirp
+
+	authorID := r.URL.Query().Get("author_id")
+
 	chirps, err := config.db.GetChirps(r.Context())
 	if err != nil {
 		respondWithError(
 			w,
 			http.StatusInternalServerError,
-			"Could't create chirp",
+			"Could't retrieve chirp",
 			err,
 		)
+	}
+
+	if authorID != "" {
+		autorUUID, err := uuid.Parse(authorID)
+		if err != nil {
+			respondWithError(
+				w,
+				http.StatusBadRequest,
+				"Couldn't covert ID to UUID type",
+				err,
+			)
+			return
+		}
+		chirps, err = config.db.GetChirpsByAuthor(
+			r.Context(),
+			autorUUID,
+		)
+		if err != nil {
+			respondWithError(
+				w,
+				http.StatusInternalServerError,
+				"Could't retrieve chirps",
+				err,
+			)
+		}
 	}
 
 	listChirps := []Chirp{}
