@@ -21,6 +21,7 @@ type apiConfig struct {
 	db       *database.Queries
 	platform string
 	secret   string
+	polkaKey string
 }
 
 func main() {

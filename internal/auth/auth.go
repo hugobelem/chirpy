@@ -99,3 +99,15 @@ func MakeRefreshToken() (string, error) {
 	rand.Read(refresh_token)
 	return hex.EncodeToString(refresh_token), nil
 }
+
+func GetAPIKey(headers http.Header) (string, error) {
+	auth := headers.Get("Authorization")
+	if auth == "" {
+		return "", errors.New("[GetAPIKey]: could not get Authorization")
+	}
+
+	apiKey := strings.Replace(auth, "ApiKey", "", 1)
+	apiKeyString := strings.Replace(apiKey, " ", "", 1)
+
+	return apiKeyString, nil
+}

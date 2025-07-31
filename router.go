@@ -27,6 +27,7 @@ func setupRouter() *http.ServeMux {
 		db:       dbQueries,
 		platform: os.Getenv("PLATFORM"),
 		secret:   os.Getenv("SECRET"),
+		polkaKey: os.Getenv("POLKA_KEY"),
 	}
 
 	fileHandler := http.StripPrefix(filepath, http.FileServer(http.Dir(dir)))
@@ -42,6 +43,7 @@ func setupRouter() *http.ServeMux {
 	mux.HandleFunc("POST /api/login", config.handlerLogin)
 	mux.HandleFunc("POST /api/refresh", config.handlerRefreshToken)
 	mux.HandleFunc("POST /api/revoke", config.handlerRevokeToken)
+	mux.HandleFunc("POST /api/polka/webhooks", config.handlerPolkaWebHook)
 
 	mux.HandleFunc("GET  /admin/metrics", config.handlerMetrics)
 	mux.HandleFunc("POST /admin/reset", config.handlerReset)
