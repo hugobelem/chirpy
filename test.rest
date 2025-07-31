@@ -11,10 +11,10 @@ POST http://localhost:8080/admin/reset
 
 ###
 POST http://localhost:8080/api/chirps
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMmRjNzExYTUtYTg4ZS00M2NmLThhMzEtYmQ5NmY5OWZmMGU2IiwiZXhwIjoxNzUzODk2MjA0LCJpYXQiOjE3NTM4OTI2MDR9.x3XWrU1zssZnJyThODCrO3dMvMJaBLJEcGNL3g8kBQI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMWI4OGFjNDAtNjJjNC00ZmVlLWI4ZTctZDg0YTc1ODRkYTNiIiwiZXhwIjoxNzUzOTI1MTI0LCJpYXQiOjE3NTM5MjE1MjR9.K_T9ehOKrjPLHBj0lwA5rAwyS8NKB-kBt2-LjS2r4ow
 
 {
-  "body": "Chirp Test 200"
+  "body": "Chirp Test 600"
 }
 
 ###
@@ -28,6 +28,13 @@ POST http://localhost:8080/api/login
 
 {
   "email": "bro@chirpy.com",
-  "password": "password",
-  "expires_in_seconds": 3600
+  "password": "password"
 }
+
+###
+POST http://localhost:8080/api/refresh
+Authorization: Bearer 1f44976ab39192ebc1f80de61529abcee4ed2332873779ad311f7ef025ee66a7
+
+###
+POST http://localhost:8080/api/revoke
+Authorization: Bearer edf40a07e8279445552a3ba14075fa9e16cca3baaace466636081aa8fe56287e

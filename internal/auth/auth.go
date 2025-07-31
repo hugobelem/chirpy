@@ -1,8 +1,11 @@
 package auth
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -37,13 +40,12 @@ func CheckPasswordHash(password, hash string) error {
 func MakeJWT(
 	userID uuid.UUID,
 	tokenSecret string,
-	expiresIn time.Duration,
 ) (string, error) {
 	signingKey := []byte(tokenSecret)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
 		Issuer: string(TokenTypeAccess),
 		IssuedAt: jwt.NewNumericDate(time.Now().UTC()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(expiresIn * time.Second)),
+		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(3600 * time.Second)),
 		Subject: userID.String(),
 	})
 	return token.SignedString(signingKey)
@@ -91,4 +93,13 @@ func GetBearerToken(headers http.Header) (string, error) {
 	tokenString := strings.Replace(bearerToken, " ", "", 1)
 
 	return tokenString, nil
+}
+
+func MakeRefreshToken() (string, error) {
+	refresh_token := make([]byte, 32)
+	_, err := rand.Read(refresh_token)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return hex.EncodeToString(refresh_token), nil
 }

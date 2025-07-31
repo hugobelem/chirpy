@@ -123,7 +123,7 @@ func (config *apiConfig) handlerCreateChirps(
 	}
 
 	type parameters struct {
-		Body   string    `json:"body"`
+		Body string `json:"body"`
 	}
 
 	decoder := json.NewDecoder(r.Body)

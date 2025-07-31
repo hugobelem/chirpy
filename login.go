@@ -8,13 +8,13 @@ import (
 	"time"
 
 	"github.com/hugobelem/chirpy/internal/auth"
+	"github.com/hugobelem/chirpy/internal/database"
 )
 
 func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
-		Email            string `json:"email"`
-		Password         string `json:"password"`
-		ExpiresInSeconds int64  `json:"expires_in_seconds"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 	type response struct {
 		User
@@ -56,15 +56,9 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expiresIn := int64(3600)
-	if params.ExpiresInSeconds > 0 {
-		expiresIn = min(params.ExpiresInSeconds, 3600)
-	}
-
 	token, err := auth.MakeJWT(
 		user.ID,
 		os.Getenv("SECRET"),
-		time.Duration(expiresIn),
 	)
 	if err != nil {
 		log.Println(err)
@@ -77,13 +71,33 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	refreshToken, _ := auth.MakeRefreshToken()
+	persistRefreshToken, err := config.db.CreateRefreshToken(
+		r.Context(),
+		database.CreateRefreshTokenParams{
+			Token:     refreshToken,
+			UserID:    user.ID,
+			ExpiresAt: time.Now().AddDate(0, 0, 60),
+		})
+	if err != nil {
+		log.Println(err)
+		respondWithError(
+			w,
+			http.StatusInternalServerError,
+			"could not persist refresh token",
+			err,
+		)
+		return
+	}
+
 	respondWithJSON(w, http.StatusOK, response{
 		User: User{
-			ID:        user.ID,
-			CreatedAt: user.CreatedAt,
-			UpdatedAt: user.UpdatedAt,
-			Email:     user.Email,
-			Token:     token,
+			ID:           user.ID,
+			CreatedAt:    user.CreatedAt,
+			UpdatedAt:    user.UpdatedAt,
+			Email:        user.Email,
+			Token:        token,
+			RefreshToken: persistRefreshToken.Token,
 		},
 	})
 }
