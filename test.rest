@@ -27,7 +27,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktY
 }
 
 ###
-GET http://localhost:8080/api/chirps?author_id=099de8f6-b481-4f64-ad99-b8b3136ece7f
+GET http://localhost:8080/api/chirps
 
 ###
 DELETE http://localhost:8080/api/chirps/10982466-cc05-45e9-a2eb-dd6310b48038

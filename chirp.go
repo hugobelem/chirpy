@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -76,6 +77,7 @@ func (config *apiConfig) handlerRetrieveChirps(
 	var chirps []database.Chirp
 
 	authorID := r.URL.Query().Get("author_id")
+	sortChirp := r.URL.Query().Get("sort")
 
 	chirps, err := config.db.GetChirps(r.Context())
 	if err != nil {
@@ -110,6 +112,12 @@ func (config *apiConfig) handlerRetrieveChirps(
 				err,
 			)
 		}
+	}
+
+	if sortChirp == "desc" {
+		sort.Slice(chirps,  func(i, j int) bool {
+			return chirps[i].CreatedAt.After(chirps[j].CreatedAt)
+		})
 	}
 
 	listChirps := []Chirp{}
