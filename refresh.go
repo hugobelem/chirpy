@@ -12,6 +12,10 @@ func (config *apiConfig) handlerRefreshToken(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
+	type response struct{
+		Token string `json:"token"`
+	}
+
 	refreshTokenParam, err := auth.GetBearerToken(r.Header)
 	if err != nil {
 		respondWithError(
@@ -41,7 +45,7 @@ func (config *apiConfig) handlerRefreshToken(
 
 	notRevoked := sql.NullTime{}
 	if refreshToken.RevokedAt != notRevoked {
-		respondWithJSON(w, http.StatusUnauthorized, nil)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -56,11 +60,7 @@ func (config *apiConfig) handlerRefreshToken(
 		return
 	}
 
-	type accessTokenStruct struct{
-		Token string `json:"token"`
-	}
-
-	respondWithJSON(w, http.StatusOK, accessTokenStruct{
+	respondWithJSON(w, http.StatusOK, response{
 		Token: accessToken,
 	})
 }

@@ -10,7 +10,7 @@ func (config *apiConfig) handlerRevokeToken(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
-	refreshTokenParam, err := auth.GetBearerToken(r.Header)
+	refreshToken, err := auth.GetBearerToken(r.Header)
 	if err != nil {
 		respondWithError(
 			w,
@@ -21,16 +21,16 @@ func (config *apiConfig) handlerRevokeToken(
 		return
 	}
 
-	_, err = config.db.RevokeRefreshToken(r.Context(), refreshTokenParam)
+	_, err = config.db.RevokeRefreshToken(r.Context(), refreshToken)
 	if err != nil {
 		respondWithError(
 			w,
 			http.StatusBadRequest,
-			"refresh token not found",
+			"couldn't revoke session",
 			err,
 		)
 		return
 	}
 
-	respondWithJSON(w, http.StatusNoContent, nil)
+	w.WriteHeader(http.StatusNoContent)
 }

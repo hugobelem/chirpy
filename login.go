@@ -56,7 +56,7 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := auth.MakeJWT(
+	accessToken, err := auth.MakeJWT(
 		user.ID,
 		os.Getenv("SECRET"),
 	)
@@ -65,14 +65,15 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		respondWithError(
 			w,
 			http.StatusInternalServerError,
-			"an unexpected error accurred",
+			"Coudn't create access JWT",
 			err,
 		)
 		return
 	}
 
 	refreshToken, _ := auth.MakeRefreshToken()
-	persistRefreshToken, err := config.db.CreateRefreshToken(
+
+	_, err = config.db.CreateRefreshToken(
 		r.Context(),
 		database.CreateRefreshTokenParams{
 			Token:     refreshToken,
@@ -84,7 +85,7 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		respondWithError(
 			w,
 			http.StatusInternalServerError,
-			"could not persist refresh token",
+			"Couldn't persist refresh token",
 			err,
 		)
 		return
@@ -96,8 +97,8 @@ func (config *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 			CreatedAt:    user.CreatedAt,
 			UpdatedAt:    user.UpdatedAt,
 			Email:        user.Email,
-			Token:        token,
-			RefreshToken: persistRefreshToken.Token,
+			Token:        accessToken,
+			RefreshToken: refreshToken,
 		},
 	})
 }
