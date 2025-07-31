@@ -15,7 +15,7 @@ func (config *apiConfig) handlerUpdateUser(w http.ResponseWriter, r *http.Reques
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
-	
+
 	token, err := auth.GetBearerToken(r.Header)
 	if err != nil {
 		respondWithError(
@@ -74,6 +74,7 @@ func (config *apiConfig) handlerUpdateUser(w http.ResponseWriter, r *http.Reques
 			"Could't update user",
 			err,
 		)
+		return
 	}
 
 	respondWithJSON(w, http.StatusOK, User{

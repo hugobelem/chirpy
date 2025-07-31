@@ -101,6 +101,10 @@ func (config *apiConfig) handlerCreateChirps(
 	w http.ResponseWriter,
 	r *http.Request,
 ) {
+	type parameters struct {
+		Body string `json:"body"`
+	}
+
 	token, err := auth.GetBearerToken(r.Header)
 	if err != nil {
 		respondWithError(
@@ -120,10 +124,6 @@ func (config *apiConfig) handlerCreateChirps(
 			err,
 		)
 		return
-	}
-
-	type parameters struct {
-		Body string `json:"body"`
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -165,6 +165,85 @@ func (config *apiConfig) handlerCreateChirps(
 		Body:      chirp.Body,
 		UserID:    chirp.UserID,
 	})
+}
+
+func (config *apiConfig) handlerDeleteChirps(w http.ResponseWriter, r *http.Request) {
+	token, err := auth.GetBearerToken(r.Header)
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusUnauthorized,
+			"could not resolve token",
+			err,
+		)
+		return
+	}
+	userID, err := auth.ValidateJWT(token, os.Getenv("SECRET"))
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusUnauthorized,
+			"invalid token",
+			err,
+		)
+		return
+	}
+
+	chirpID := r.PathValue("chirpID")
+	if chirpID == "" {
+		log.Println("Chirp ID not provided")
+		respondWithError(
+			w,
+			http.StatusBadRequest,
+			"Chirp ID not provided",
+			nil,
+		)
+	}
+
+	chirpUUID, err := uuid.Parse(chirpID)
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusBadRequest,
+			"Couldn't covert ID to UUID type",
+			err,
+		)
+		return
+	}
+
+	chirp, err := config.db.GetChirp(r.Context(), chirpUUID)
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusNotFound,
+			"Chirp not found",
+			err,
+		)
+		return
+	}
+
+	if chirp.UserID != userID {
+		respondWithError(
+			w,
+			http.StatusForbidden,
+			"Coudn't delete chirp",
+			nil,
+		)
+		return
+	}
+
+	_, err = config.db.DeleteChirp(r.Context(), chirpUUID)
+	if err != nil {
+		respondWithError(
+			w,
+			http.StatusForbidden,
+			"Coudn't delete chirp",
+			nil,
+		)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func validateChirp(body string) (string, error) {

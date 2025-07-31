@@ -20,14 +20,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktY
 
 ###
 POST http://localhost:8080/api/chirps
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiMWI4OGFjNDAtNjJjNC00ZmVlLWI4ZTctZDg0YTc1ODRkYTNiIiwiZXhwIjoxNzUzOTI1MTI0LCJpYXQiOjE3NTM5MjE1MjR9.K_T9ehOKrjPLHBj0lwA5rAwyS8NKB-kBt2-LjS2r4ow
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiZDJhYmU5YjAtY2IzZi00YTc0LTg5YWEtM2EyYzA5NjUzNGNiIiwiZXhwIjoxNzUzOTY3ODcyLCJpYXQiOjE3NTM5NjQyNzJ9.dILIkLjrgU7Fl7gFqrONbAnSHShdfyfPD8qvxj5f6wI
 
 {
-  "body": "Chirp Test 600"
+  "body": "Chirp 2"
 }
 
 ###
 GET http://localhost:8080/api/chirps
+
+###
+DELETE http://localhost:8080/api/chirps/10982466-cc05-45e9-a2eb-dd6310b48038
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjaGlycHktYWNjZXNzIiwic3ViIjoiZDJhYmU5YjAtY2IzZi00YTc0LTg5YWEtM2EyYzA5NjUzNGNiIiwiZXhwIjoxNzUzOTY4MDE3LCJpYXQiOjE3NTM5NjQ0MTd9.T2VEp8Wb04wVahycpHs-cUrHZ5bLDQ7fifWVwiQxt1A
 
 ###
 GET http://localhost:8080/api/chirps/fc61dd20-27b9-4f75-b0a5-34731c3e69a1
@@ -36,8 +40,8 @@ GET http://localhost:8080/api/chirps/fc61dd20-27b9-4f75-b0a5-34731c3e69a1
 POST http://localhost:8080/api/login
 
 {
-  "email": "brosky@chirpy.com",
-  "password": "passwordo"
+  "email": "bro@chirpy.com",
+  "password": "password"
 }
 
 ###

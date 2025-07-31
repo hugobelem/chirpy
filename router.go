@@ -38,6 +38,7 @@ func setupRouter() *http.ServeMux {
 	mux.HandleFunc("POST /api/chirps", config.handlerCreateChirps)
 	mux.HandleFunc("GET  /api/chirps", config.handlerRetrieveChirps)
 	mux.HandleFunc("GET  /api/chirps/{chirpID}", config.handlerGetSingleChirp)
+	mux.HandleFunc("DELETE  /api/chirps/{chirpID}", config.handlerDeleteChirps)
 	mux.HandleFunc("POST /api/login", config.handlerLogin)
 	mux.HandleFunc("POST /api/refresh", config.handlerRefreshToken)
 	mux.HandleFunc("POST /api/revoke", config.handlerRevokeToken)
